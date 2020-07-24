@@ -29,6 +29,31 @@ bot.on('message',function (message) {
 	}
 })
 
+//DJ command (in progress)
+bot.on('message', async message => {
+  if (!message.guild) return;
+  if (message.content === '*play') {
+    if (message.member.voice.channel) {
+      const connection = await message.member.voice.channel.join();
+	  const ytdl = require('ytdl-core');
+		connection.play(ytdl('https://www.youtube.com/watch?v=GIn8_Q27WFY', { filter: 'audioonly' }));
+    } else {
+      message.reply('Tu dois rejoindre un salon vocal avant !');
+    }
+  }
+});
+
+bot.on('message', async message => {
+  if (!message.guild) return;
+  if (message.content === '*stop') {
+	  if (message.member.voice.channel) {
+			message.member.voice.channel.leave();
+    } else {
+      message.reply('Tu dois rejoindre le vocal pour arr\u00eater la musique !');
+    }
+  }
+})
+
 // Welcome and Goodbye
 
 	// Welcome constants (I know I can do more optimised but I prefer this presentation)
