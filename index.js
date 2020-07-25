@@ -29,14 +29,15 @@ bot.on('message',function (message) {
 	}
 })
 
-//DJ command (in progress)
+//DJ command
 bot.on('message', async message => {
-  if (!message.guild) return;
-  if (message.content === '*play') {
+  if (message.content.startsWith ('*play')) {
+	  		let args = message.content.split(' ')
+			args.shift()
     if (message.member.voice.channel) {
       const connection = await message.member.voice.channel.join();
 	  const ytdl = require('ytdl-core');
-		connection.play(ytdl('https://www.youtube.com/watch?v=GIn8_Q27WFY', { filter: 'audioonly' }));
+		connection.play(ytdl(args.join(' ')), { filter: 'audioonly' });
     } else {
       message.reply('Tu dois rejoindre un salon vocal avant !');
     }
@@ -44,7 +45,6 @@ bot.on('message', async message => {
 });
 
 bot.on('message', async message => {
-  if (!message.guild) return;
   if (message.content === '*stop') {
 	  if (message.member.voice.channel) {
 			message.member.voice.channel.leave();
