@@ -8,8 +8,8 @@ const Google = require('./commands/google')
 const WPedia = require('./commands/wpedia')
 const Pokemon = require('./commands/pokemon')
 
-// This line connect the bot to Discord (of course, "ThisSentenceIsNotMyToken" must be replace by a real token)
-bot.login('ThisSentenceIsNotMyToken');
+// This line connect the bot to Discord
+bot.login(process.env.TOKEN);
 
 // This line set game to "flaming bananas"
 bot.on('ready', function() {
