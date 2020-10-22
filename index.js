@@ -1,5 +1,5 @@
-// All the constants to load everything the bot needs to work
 const Discord = require('discord.js');
+const Wiki = require('wikijs');
 const bot = new Discord.Client();
 const Ping = require('./commands/ping')
 const Pong = require('./commands/pong')
@@ -7,31 +7,26 @@ const Help = require('./commands/help')
 const Google = require('./commands/google')
 const WPedia = require('./commands/wpedia')
 const Pokemon = require('./commands/pokemon')
+const Play = require('./commands/play')
 
-// This line connect the bot to Discord
+//Bot's connection
 bot.login(process.env.TOKEN);
 
-// This line set game to "flaming bananas"
+//Bot's activity
 bot.on('ready', function() {
 	bot.user.setActivity('flamber des bananes')
 })
 
-// This code manages all text commands
-bot.on('message',function (message) {
-	let commandUsed = Ping.parse(message) ||
-					  Pong.parse(message) ||
-					  Help.parse(message) ||
-					  Google.parse(message) || 
-					  WPedia.parse(message) ||
-					  Pokemon.parse(message)
-	if (message.content === 'Oh un l\u00e9gendaire !') {
-	message.channel.send('nope')
-	}
+//Bot's commands based on messages
+bot.on('message', function (message) {
+	var allMessagesCommand = [Ping.parse(message), Pong.parse(message), Help.parse(message), Google.parse(message), WPedia.parse(message), Pokemon.parse(message)]
+	let commandUse = allMessagesCommand
 })
 
-//DJ command
+
+//DJ COMMANDS
 bot.on('message', async message => {
-  if (message.content.startsWith ('*play')) {
+  if (message.content.startsWith ("*play")) {
 	  		let args = message.content.split(' ')
 			args.shift()
     if (message.member.voice.channel) {
@@ -39,24 +34,38 @@ bot.on('message', async message => {
 	  const ytdl = require('ytdl-core');
 		connection.play(ytdl(args.join(' ')), { filter: 'audioonly' });
     } else {
-      message.reply('Tu dois rejoindre un salon vocal avant !');
+      message.reply(`Tu dois rejoindre un salon vocal avant !`);
     }
   }
 });
 
 bot.on('message', async message => {
-  if (message.content === '*stop') {
+  if (message.content === "*stop") {
 	  if (message.member.voice.channel) {
 			message.member.voice.channel.leave();
     } else {
-      message.reply('Tu dois rejoindre le vocal pour arr\u00eater la musique !');
+      message.reply(`Tu dois rejoindre le vocal pour arrêter la musique !`);
     }
   }
 })
 
-// Welcome and Goodbye
 
-	// Welcome constants (I know I can do more optimised but I prefer this presentation)
+//Delete
+bot.on('message', async message => {
+	if(message.content.startsWith("*delete")) {
+		let args = message.content.split(' ')
+			args.shift()
+        message.delete();
+    if(!message.member.hasPermission("MANAGE_MESSAGES")) return message.reply(`tu n\'es pas admin petit chenapan !`);
+    if(!args[0]) return message.channel.send(`Tu dois dire le nombre de messages à supprimer !`);
+    message.channel.bulkDelete(args[0]).then(() => {
+        message.channel.send(`Messages supprimés !`).then(msg => msg.delete(args.join));
+
+    })
+}})
+
+//EVENTS COMMANDS
+	//Constantes et variables d'arrivée
 const bvn01 = new Discord.MessageAttachment('https://media1.tenor.com/images/6a46f8c384ad3d593bf83da2c0566791/tenor.gif')
 const bvn02 = new Discord.MessageAttachment('https://media1.tenor.com/images/5d7f4de753efeb7001c480d338c3e2a2/tenor.gif')
 const bvn03 = new Discord.MessageAttachment('https://media1.tenor.com/images/dbc6597b27b388e63bb782875fc7140c/tenor.gif')
@@ -70,7 +79,7 @@ const bvn10 = new Discord.MessageAttachment('https://media1.tenor.com/images/a89
 var bvngif = [(bvn01), (bvn02), (bvn03), (bvn04), (bvn05), (bvn06), (bvn07), (bvn08), (bvn09), (bvn10),];
 var bvnfact = Math.floor(Math.random() * bvngif.length);
 
-	// Goodbye constants (read to up)
+	//Constantes et variables de départ
 const dpr01 = new Discord.MessageAttachment('https://media1.tenor.com/images/68d182fce1f8b0010c49753a2c9ce9c5/tenor.gif')
 const dpr02 = new Discord.MessageAttachment('https://media1.tenor.com/images/cc2fe047e5a80fa1e0ac7524b8ecaeed/tenor.gif')
 const dpr03 = new Discord.MessageAttachment('https://media1.tenor.com/images/7d0e931bd1ea96df77b33ad5a67b9e4a/tenor.gif')
@@ -84,25 +93,27 @@ const dpr10 = new Discord.MessageAttachment('https://media1.tenor.com/images/a71
 var dprgif = [(dpr01), (dpr02), (dpr03), (dpr04), (dpr05), (dpr06), (dpr07), (dpr08), (dpr09), (dpr10),];
 var dprfact = Math.floor(Math.random() * dprgif.length);
 
-	// This code is the Welcome message in the server
+
+	//Message de bienvenue
 bot.on('guildMemberAdd', member => {
   const channel = member.guild.channels.cache.find(ch => ch.id === '690607052053282838');
    if (!channel) return;
-	channel.send(`${member} Bienvenue \u00e0 **BAGUETTELAND:tm:** ! N'h\u00e9site pas \u00e0 lire le <#690608575407456357> !`,bvngif[bvnfact]);
+	channel.send(`${member} Bienvenue à **BAGUETTELAND:tm:** ! N'hésite pas à lire le <#690608575407456357> !`,bvngif[bvnfact]);
 })
 
 
-	// This code is the Welcome message in DM
+	//Propagande de bienvenue
 bot.on('guildMemberAdd', member => {
   member.createDM().then(channel => {
-    return channel.send(`Bienvenue \u00e0 **BAGUETTELAND:tm:** ! N'h\u00e9site pas \u00e0 jeter un \u0153il \u00e0 nos r\u00e9seaux sociaux :\nInstagram : **https://www.instagram.com/discord_mignet/** \nYouTube : **https://www.youtube.com/channel/UC05FijDCDXiO1c5T0hZ-4fg** \nTwitter : **https://twitter.com/BAGUETTELAND_tm** \n Tu peux aussi inviter d'autres personnes sur le serveur en utilisant ce lien :\n https://discord.com/invite/Aeu5bRq `)
-  }).catch(console.error)
+    return channel.send(`Bienvenue à **BAGUETTELAND:tm:** ! N'hésite pas à jeter un œil à nos réseaux sociaux :\nInstagram : **https://www.instagram.com/discord_mignet/** \nYouTube : **https://www.youtube.com/channel/UC05FijDCDXiO1c5T0hZ-4fg** \nTwitter : **https://twitter.com/BAGUETTELAND_tm** \n Tu peux aussi inviter d'autres personnes sur le serveur en utilisant ce lien :\n https://discord.com/invite/Aeu5bRq `)
+  }).catch(console.log('Propagande bloquée par le nouveau membre'))
 })
 
 
-	// This code is the goodbye message
+
+	//Message d'au-revoir
 bot.on('guildMemberRemove', member => {
   const channel = member.guild.channels.cache.find(ch => ch.id === '690607052053282838');
   if (!channel) return;
-    channel.send(`${member} a rejoint le cimeti\u00e8re.`,dprgif[dprfact]);
+    channel.send(`${member} a rejoint le cimetière.`,dprgif[dprfact]);
 })
