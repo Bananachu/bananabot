@@ -1,16 +1,14 @@
-const Discord = require('discord.js');
-const Wiki = require('wikijs');
-const bot = new Discord.Client();
+const Discord = require('discord.js')
+const bot = new Discord.Client()
 const Ping = require('./commands/ping')
 const Pong = require('./commands/pong')
 const Help = require('./commands/help')
 const Google = require('./commands/google')
 const WPedia = require('./commands/wpedia')
 const Pokemon = require('./commands/pokemon')
-const Play = require('./commands/play')
 
 //Bot's connection
-bot.login(process.env.TOKEN);
+bot.login(process.env.TOKEN)
 
 //Bot's activity
 bot.on('ready', function() {
