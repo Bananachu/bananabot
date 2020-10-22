@@ -1,0 +1,25 @@
+{
+
+  "name": "Bananabot",
+
+  "description": "an epic bot for Discord",
+
+  "version": "0.3.1",
+
+  "main": "index.js",
+
+  "scripts": {
+
+    "start": "node --unhandled-rejections=none index.js"
+
+  },
+
+  "dependencies": {
+
+    "discord.js": "12.4.0",
+
+    "request": "2.81.0"
+
+  }
+
+}
