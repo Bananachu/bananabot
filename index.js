@@ -9,7 +9,7 @@ const Pokemon = require('./commands/pokemon');
 
 
 // Connection
-bot.login('NDU1Njk0NDM1ODMzODcyMzg0.Wx5cgw.LQ8cybF2u1VhoV4V8Q7kdY_3ShA');
+bot.login('the token');
 
 
 // Activity
