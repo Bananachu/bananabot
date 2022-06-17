@@ -1,8 +1,6 @@
-const Command = require('./command')
 const Discord = require('discord.js');
-
-const embed = new Discord.MessageEmbed()
-	.setColor('#7289da')
+var embed = new Discord.MessageEmbed()
+	.setColor('#5865f2')
 	.setTitle('Liste des commandes')
 	.setDescription('Voici la liste des commandes disponibles pour le Bananabot.')
 	.setThumbnail('https://i.imgur.com/NhvMsWx.png')
@@ -13,19 +11,9 @@ const embed = new Discord.MessageEmbed()
 		{ name: '\ud83d\uded1 Commandes administratives', value: '``*delete [x]`` : Supprime ``x`` messages' },
 	)
 	.setFooter('Ver. 0.4.2.1 (bêta)');
-	
-	
-module.exports = class Help extends Command {
 
-
-	static match (message) {
-		return message.content.startsWith('*help')
-	}
-
-
+module.exports = class Help {
 	static action (message) {
-		message.channel.send(embed)
+		message.channel.send(embed);
 	}
-
-
 }
