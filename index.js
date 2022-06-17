@@ -1,77 +1,45 @@
+const fs = require('fs');
 const Discord = require('discord.js');
-const bot = new Discord.Client();
-const Ping = require('./commands/ping');
-const Pong = require('./commands/pong');
-const Help = require('./commands/help');
-const Google = require('./commands/google');
-const WPedia = require('./commands/wpedia');
-const Pokemon = require('./commands/pokemon');
+const client = new Discord.Client();
 
+//Connection
+client.login('42');
 
-// Connection
-bot.login('the token');
-
-
-// Activity
-bot.on('ready', function() {
-	bot.user.setActivity('flamber des bananes');
+//Set activity
+client.on('ready', function() {
+	client.user.setActivity('flamber des bananes');
 })
 
-
-// "Stable" commands
-bot.on('message', function (message) {
-	Ping.parse(message);
-	Pong.parse(message);
-	Help.parse(message);
-	Google.parse(message);
-	WPedia.parse(message);
-	Pokemon.parse(message);
-})
-
-
-// DJ command (bêta)
-bot.on('message', async message => {
-	if (message.content.startsWith ('*play')) {
-			let args = message.content.split(' ');
-			args.shift();
-		if (message.member.voice.channel) {
-			const connection = await message.member.voice.channel.join();
-			const ytdl = require('ytdl-core');
-			connection.play(ytdl(args.join(' ')), { filter: 'audioonly' });
-		} else {
-			message.reply('Tu dois rejoindre un salon vocal avant !');
-		}
+//chek all messages and see if they're commands
+client.on('message', function (message) {
+	let input;
+	if (message.content.startsWith ('*')) {
+		input = message.content.substr(1);
+		input = input.split(' ');
+	} else return;
+	let path = './commands/' + input[0] + '.js';
+	if (fs.existsSync(path)) {
+		let Essai = require(path);
+		return Essai.action(message, input);
+	} else {
+		return message.channel.send('Commande inexistante. Entrez `*help` pour afficher l\'aide.');
 	}
 })
 
-bot.on('message', async message => {
-	if (message.content === '*stop') {
-		if (message.member.voice.channel) {
-			message.member.voice.channel.leave();
-		} else {
-			message.reply('Tu dois rejoindre le vocal pour arrêter la musique !');
-		}
+/*client.on('message', function (message) {
+	if (message.content.startsWith ('*avatar')) {
+		//let args = message.content.split(' ');
+		//args.shift();
+		//var james = message.author.guild.user.fetch(args[0])
+		//var avatar = "https://cdn.discordapp.com/avatars/" + james.id + "/" + james.avatar + ".png";
+		message.member.roles.add(roleList[args]);
+		//message.member.roles.remove('720611325843341313');
+
 	}
-})
+})*/
 
 
-// Message deleter *delete (bêta)
-bot.on('message', async message => {
-	if (message.content.startsWith('*delete')) {
-		let args = message.content.split(' ');
-		args.shift();
-		if (!message.member.hasPermission('MANAGE_MESSAGES')) {
-			return message.delete();
-		}
-		if(!args[0]) {
-			return message.delete();
-		}
-		message.channel.bulkDelete(args[0]);
-	}
-});
-
-
-// Welcome message
+	//Message de bienvenue
 var bvngif = [
 	'6a46f8c384ad3d593bf83da2c0566791',
 	'5d7f4de753efeb7001c480d338c3e2a2',
@@ -85,16 +53,16 @@ var bvngif = [
 	'a89290afb528476e1dee4a241b2c4b5b'
 	];
 
-bot.on('guildMemberAdd', member => {
+client.on('guildMemberAdd', member => {
 	var bvnfact = Math.floor(Math.random() * bvngif.length);
 	var bienvenue = (new Discord.MessageAttachment('https://media.tenor.com/images/' + (bvngif[bvnfact]) + '/tenor.gif'));
 	const channel = member.guild.channels.cache.find(ch => ch.id === '690607052053282838');
-   		if (!channel) return;
+	if (!channel) return;
 	channel.send(`${member} Bienvenue à **BAGUETTELAND:tm:** ! N'hésite pas à lire le <#690608575407456357> !`,bienvenue);
 })
 
 
-// Message for new members
+//Pub pour les nouveaux membres
 const pub = {
 	intro:'Bienvenue à **BAGUETTELAND:tm:** ! N\'hésite pas à jeter un œil à nos réseaux sociaux :\n',
 	insta:'Instagram : **https://www.instagram.com/discord_mignet/** \n',
@@ -103,14 +71,14 @@ const pub = {
 	outro:'Tu peux aussi inviter d\'autres personnes sur le serveur en utilisant ce lien :\nhttps://discord.com/invite/Aeu5bRq'
 };
 
-bot.on('guildMemberAdd', member => {
+client.on('guildMemberAdd', member => {
 	member.createDM().then(channel => {
 		return channel.send(pub.intro + pub.insta + pub.ytube + pub.tweet + pub.outro);
 	}).catch(console.log('Propagande bloquée par le nouveau membre'));
 });
 
 
-// Goodbye message
+//Message d'au-revoir
 var dprgif = [
 	'68d182fce1f8b0010c49753a2c9ce9c5',
 	'cc2fe047e5a80fa1e0ac7524b8ecaeed',
@@ -123,7 +91,8 @@ var dprgif = [
 	'fc000ba0b39c56c1480f00d9a5793b1c',
 	'a7182d0168aa0ad104248cc4abe05737'
 	];
-bot.on('guildMemberRemove', member => {
+
+client.on('guildMemberRemove', member => {
 	var dprfact = Math.floor(Math.random() * dprgif.length);
 	var depart = (new Discord.MessageAttachment('https://media.tenor.com/images/' + (dprgif[dprfact]) + '/tenor.gif'));
  	const channel = member.guild.channels.cache.find(ch => ch.id === '690607052053282838');
