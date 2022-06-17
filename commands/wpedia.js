@@ -1,18 +1,6 @@
-const Command = require('./command')
-
-module.exports = class WPedia extends Command {
-
-
-	static match (message) {
-		return message.content.startsWith('*wpedia')
+module.exports = class Wpedia {
+	static action (message, input) {
+		input.shift()
+		message.channel.send('<:google:734097832465924116> | Voici les r\u00e9sultats de Wikipédia pour *"' + args.join(' ') +'"*\nhttps://fr.wikipedia.org/w/index.php?search=' + args.join('%20'));
 	}
-
-
-	static action (message) {
-		let args = message.content.split(' ')
-		args.shift()
-		message.channel.send('<:wikipedia:734096129704329277> | Voici les r\u00e9sultats de Wikip\u00e9dia pour *"' + args.join(' ') +'"*\nhttps://fr.wikipedia.org/w/index.php?cirrusUserTesting=glent_m0&search=%s' + args.join('%20'))
-	}
-
-
 }
